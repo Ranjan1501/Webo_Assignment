@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./register.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Home from "../homepage/Home";
+
 
 const Register = () => {
   const navigate = useNavigate();
