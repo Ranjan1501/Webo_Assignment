@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "./home.css";
 import axios from "axios";
 const Home = ({ setLoginUser }) => {
   const [user, setUser] = useState({});
-  const [flag, setFlag] = useState(true);
+  const navigate = useNavigate();
+
+  // get user details after login
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("test") !== null)) {
       let user = JSON.parse(localStorage.getItem("test"));
       setUser(user);
     }
-  }, []);
+  }, [user]);
 
-  // useEffect(() => {
-  //   changeStatus();
-  // }, []);
-  // let getUser =  if (JSON.parse(localStorage.getItem("user")) {}
-  // if (getUser !== null) {
-  //   setUser(getUser);
-  // }
-
+  // delete Account
   const deleteAccount = async () => {
     await fetch(`http://localhost:4000/${user._id}`, {
       method: "DELETE",
@@ -26,35 +23,24 @@ const Home = ({ setLoginUser }) => {
       .then((res) => res.json())
       .then((res) => {
         console.log("Data:", res);
-        // setLoginUser({});
         localStorage.removeItem("test");
+        setLoginUser({});
       })
       .catch((err) => {
         console.log("error:", err);
       });
   };
+  // toggle Status
   const changeStatus = () => {
-    // setTimeout(() => {
-    //   setFlag(false);
-    // }, 2000);
-
     let active = {
       status: "Active",
     };
     axios
-      .patch(
-        `http://localhost:4000/${user._id}`,
-        active
-        // method: "PATCH",
-        // headers: {
-        //   Accept: "application/json",
-        //   "Content-Type": "application/json",
-        // },
-        // body: JSON.stringify(active),
-      )
+      .patch(`http://localhost:4000/${user._id}`, active)
       .then((res) => res.json())
       .then((data) => {
         console.log("Data", data);
+        setLoginUser({});
       })
       .catch((err) => {
         console.log("error:", err);
@@ -66,13 +52,8 @@ const Home = ({ setLoginUser }) => {
     localStorage.removeItem("test");
   };
 
-  // const setLoginUser = () => {
-  //     setUser(setLoginUser);
-  // }
-
-  //   console.log("user:", getUser);
-
-  const editPassword = async () => {
+  // edit profile
+  const editProfile = async () => {
     await fetch(`http://localhost:4000/${user._id}`, {
       method: "PUT",
       headers: {
@@ -103,7 +84,7 @@ const Home = ({ setLoginUser }) => {
           Delete Account
         </div>
         <br />
-        <div className="button" onClick={editPassword}>
+        <div className="button" onClick={() => navigate("/register")}>
           Edit Profile
         </div>
         <br />
