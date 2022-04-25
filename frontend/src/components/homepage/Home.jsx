@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./home.css";
-
+import axios from "axios";
 const Home = ({ setLoginUser }) => {
   const [user, setUser] = useState({});
+  const [flag, setFlag] = useState(true);
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("user") !== null)) {
-      let user = JSON.parse(localStorage.getItem("user"));
+    if (JSON.parse(localStorage.getItem("test") !== null)) {
+      let user = JSON.parse(localStorage.getItem("test"));
       setUser(user);
     }
   }, []);
 
+  // useEffect(() => {
+  //   changeStatus();
+  // }, []);
   // let getUser =  if (JSON.parse(localStorage.getItem("user")) {}
   // if (getUser !== null) {
   //   setUser(getUser);
@@ -23,24 +27,31 @@ const Home = ({ setLoginUser }) => {
       .then((res) => {
         console.log("Data:", res);
         // setLoginUser({});
-        localStorage.removeItem("user");
+        localStorage.removeItem("test");
       })
       .catch((err) => {
         console.log("error:", err);
       });
   };
-  const changeStatus = async () => {
+  const changeStatus = () => {
+    // setTimeout(() => {
+    //   setFlag(false);
+    // }, 2000);
+
     let active = {
       status: "Active",
     };
-    await fetch(`http://localhost:4000/${user._id}`, {
-      method: "PATCH",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(active),
-    })
+    axios
+      .patch(
+        `http://localhost:4000/${user._id}`,
+        active
+        // method: "PATCH",
+        // headers: {
+        //   Accept: "application/json",
+        //   "Content-Type": "application/json",
+        // },
+        // body: JSON.stringify(active),
+      )
       .then((res) => res.json())
       .then((data) => {
         console.log("Data", data);
@@ -48,6 +59,11 @@ const Home = ({ setLoginUser }) => {
       .catch((err) => {
         console.log("error:", err);
       });
+  };
+
+  const logOutUser = () => {
+    setLoginUser({});
+    localStorage.removeItem("test");
   };
 
   // const setLoginUser = () => {
@@ -79,7 +95,7 @@ const Home = ({ setLoginUser }) => {
       <h1>Hello {user.name} Welcome </h1>
       <h2> Account Status: {user.status} </h2>
       <div className="buttonGroup">
-        <div className="button" onClick={() => setLoginUser({})}>
+        <div className="button" onClick={logOutUser}>
           Logout
         </div>
         <br />
@@ -95,6 +111,7 @@ const Home = ({ setLoginUser }) => {
         <div className="button" onClick={changeStatus}>
           Toggle Status
         </div>
+
         <br />
       </div>
     </div>

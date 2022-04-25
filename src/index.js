@@ -6,7 +6,7 @@ const User = require("./Models/users.models");
 // const userController = require("./Controllers/users.controllers");
 const app = express();
 app.use(express.json());
-// app.use(express.urlencoded());
+app.use(express.urlencoded());
 app.use(cors());
 
 //Routes
@@ -65,6 +65,7 @@ app.patch("/:id", async (req, res) => {
     const user = await User.findByIdAndUpdate(
       req.params.id,
       req.body,
+      { new: true },
       (err, user) => {
         res.status(201).json({ user });
       }
